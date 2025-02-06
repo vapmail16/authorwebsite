@@ -21,4 +21,6 @@ build/
 
 # OS files
 .DS_Store
-Thumbs.db 
+Thumbs.db firebase-config.js
+functions/node_modules/
+.firebaserc
