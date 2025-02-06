@@ -29,10 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 spinner.style.display = 'inline-block';
                 button.disabled = true;
 
+                // Check if Firebase is available
+                if (!window.db) {
+                    throw new Error('Firebase not initialized');
+                }
+
                 const email = newsletterForm.email.value;
                 
-                // Add to Firestore using compat version
-                await db.collection('subscribers').add({
+                await window.db.collection('subscribers').add({
                     email,
                     subscriptionDate: firebase.firestore.FieldValue.serverTimestamp(),
                     status: 'pending',
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 newsletterForm.reset();
             } catch (error) {
                 console.error('Subscription error:', error);
-                messageDiv.textContent = 'Error subscribing. Please try again.';
+                messageDiv.textContent = 'Error subscribing. Please try again later.';
                 messageDiv.className = 'form-message error';
             } finally {
                 buttonText.style.display = 'inline-block';
@@ -130,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Try to store in Firebase if available
                 if (window.db) {
                     try {
-                        await db.collection('contactMessages').add({
+                        await window.db.collection('contactMessages').add({
                             name: contactForm.name.value,
                             email: contactForm.email.value,
                             message: contactForm.message.value,
@@ -841,7 +845,7 @@ async function testFirebase() {
         console.log('Testing Firebase connection...');
         
         // Test newsletter subscription
-        const testSubscriber = await db.collection('subscribers').add({
+        const testSubscriber = await window.db.collection('subscribers').add({
             email: 'test@example.com',
             subscriptionDate: firebase.firestore.FieldValue.serverTimestamp(),
             status: 'test'
@@ -849,7 +853,7 @@ async function testFirebase() {
         console.log('Test subscriber added with ID:', testSubscriber.id);
 
         // Test contact form
-        const testMessage = await db.collection('contactMessages').add({
+        const testMessage = await window.db.collection('contactMessages').add({
             name: 'Test User',
             email: 'test@example.com',
             message: 'This is a test message',
