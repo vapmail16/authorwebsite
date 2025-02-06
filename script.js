@@ -15,13 +15,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Newsletter Form Submission
-    const newsletterForm = document.querySelector('.newsletter-form');
+    const newsletterForm = document.getElementById('newsletterForm');
     if (newsletterForm) {
-        newsletterForm.addEventListener('submit', (e) => {
+        newsletterForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = e.target.querySelector('input').value;
-            alert('Thank you for subscribing!');
-            e.target.reset();
+            const button = newsletterForm.querySelector('button');
+            const buttonText = button.querySelector('.button-text');
+            const spinner = button.querySelector('.spinner');
+            const messageDiv = document.getElementById('newsletterMessage');
+
+            try {
+                buttonText.style.display = 'none';
+                spinner.style.display = 'inline-block';
+                button.disabled = true;
+
+                const email = newsletterForm.email.value;
+                
+                // Add to Firestore using compat version
+                await db.collection('subscribers').add({
+                    email,
+                    subscriptionDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'pending',
+                    verified: false,
+                    verificationToken: Math.random().toString(36).substr(2)
+                });
+
+                messageDiv.textContent = 'Thank you for subscribing!';
+                messageDiv.className = 'form-message success';
+                newsletterForm.reset();
+            } catch (error) {
+                console.error('Subscription error:', error);
+                messageDiv.textContent = 'Error subscribing. Please try again.';
+                messageDiv.className = 'form-message error';
+            } finally {
+                buttonText.style.display = 'inline-block';
+                spinner.style.display = 'none';
+                button.disabled = false;
+            }
         });
     }
 
@@ -73,7 +103,60 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         console.log('Contact form found');
-        contactForm.addEventListener('submit', handleFormSubmit);
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const button = contactForm.querySelector('button');
+            const buttonText = button.querySelector('.button-text');
+            const spinner = button.querySelector('.spinner');
+            const messageDiv = document.getElementById('contactMessage');
+
+            try {
+                buttonText.style.display = 'none';
+                spinner.style.display = 'inline-block';
+                button.disabled = true;
+
+                // First send via EmailJS
+                const emailjsResponse = await emailjs.send(
+                    CONFIG.emailjs.serviceId,
+                    CONFIG.emailjs.templateId,
+                    {
+                        from_name: contactForm.name.value,
+                        from_email: contactForm.email.value,
+                        message: contactForm.message.value
+                    }
+                );
+                console.log('EmailJS Response:', emailjsResponse);
+
+                // Try to store in Firebase if available
+                if (window.db) {
+                    try {
+                        await db.collection('contactMessages').add({
+                            name: contactForm.name.value,
+                            email: contactForm.email.value,
+                            message: contactForm.message.value,
+                            date: firebase.firestore.FieldValue.serverTimestamp(),
+                            status: 'new'
+                        });
+                        console.log('Message stored in Firebase');
+                    } catch (firebaseError) {
+                        console.error('Firebase storage failed:', firebaseError);
+                        // Continue since EmailJS succeeded
+                    }
+                }
+
+                messageDiv.textContent = 'Message sent successfully!';
+                messageDiv.className = 'form-message success';
+                contactForm.reset();
+            } catch (error) {
+                console.error('Contact form error:', error);
+                messageDiv.textContent = 'Error sending message. Please try again.';
+                messageDiv.className = 'form-message error';
+            } finally {
+                buttonText.style.display = 'inline-block';
+                spinner.style.display = 'none';
+                button.disabled = false;
+            }
+        });
 
         // Handle book inquiry parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -751,4 +834,55 @@ function updatePagination(currentPage, totalPages, filter) {
             </a>
         `;
     }
+}
+
+async function testFirebase() {
+    try {
+        console.log('Testing Firebase connection...');
+        
+        // Test newsletter subscription
+        const testSubscriber = await db.collection('subscribers').add({
+            email: 'test@example.com',
+            subscriptionDate: firebase.firestore.FieldValue.serverTimestamp(),
+            status: 'test'
+        });
+        console.log('Test subscriber added with ID:', testSubscriber.id);
+
+        // Test contact form
+        const testMessage = await db.collection('contactMessages').add({
+            name: 'Test User',
+            email: 'test@example.com',
+            message: 'This is a test message',
+            date: firebase.firestore.FieldValue.serverTimestamp(),
+            status: 'test'
+        });
+        console.log('Test message added with ID:', testMessage.id);
+
+        alert('Firebase test successful! Check console for details.');
+        return true;
+    } catch (error) {
+        console.error('Firebase test failed:', error);
+        alert('Firebase test failed. Check console for details.');
+        return false;
+    }
+}
+
+// Add test button (only in development)
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    const testButton = document.createElement('button');
+    testButton.textContent = 'Test Firebase Connection';
+    testButton.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        z-index: 1000;
+    `;
+    testButton.onclick = testFirebase;
+    document.body.appendChild(testButton);
 }

@@ -29,7 +29,8 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://www.vikkasarunpareek.com/" />
     <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <!-- Add preload for critical resources -->
     <link rel="preload" href="./styles.css" as="style">
     <!-- Remove font preload until we have the actual font file -->
@@ -64,7 +65,10 @@
             <span>Vikkas Arun Pareek</span>
         </div>
         <button class="nav-toggle">
-            <span class="hamburger"></span>
+            <span class="hamburger">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+                <span class="fallback-icon">☰</span>
+            </span>
         </button>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
@@ -225,10 +229,20 @@
         <div class="container">
             <h2>Join the Club</h2>
             <p>Subscribe to get updates about new releases and exclusive content</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email here">
-                <button type="submit" class="cta-button">Sign Up</button>
+            <form id="newsletterForm" class="newsletter-form">
+                <input type="email" 
+                       name="email" 
+                       placeholder="Enter your email here" 
+                       required
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                <button type="submit" class="cta-button">
+                    <span class="button-text">Sign Up</span>
+                    <span class="spinner" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </span>
+                </button>
             </form>
+            <div id="newsletterMessage" class="form-message"></div>
         </div>
     </section>
 
@@ -269,6 +283,13 @@
         </div>
     </footer>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-functions-compat.js"></script>
+    
+    <!-- Config and main script -->
+    <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 

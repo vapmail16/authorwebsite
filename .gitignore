@@ -1,4 +1,6 @@
 # Configuration files
+firebase-config.js
+**/firebase-config.js
 config.js
 
 # Dependencies
@@ -6,6 +8,7 @@ node_modules/
 
 # Environment files
 .env
+.env.local
 config.keys.js
 
 # Build files

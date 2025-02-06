@@ -103,6 +103,39 @@ body {
 
 .nav-toggle {
     display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.hamburger {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.hamburger:before,
+.hamburger:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    left: 0;
+}
+
+.hamburger:before {
+    top: -6px;
+}
+
+.hamburger:after {
+    bottom: -6px;
 }
 
 /* Hero Section */
@@ -295,6 +328,11 @@ footer {
         padding: 1rem;
     }
 
+    .nav-toggle {
+        display: block;
+        z-index: 100;
+    }
+
     .nav-menu {
         display: none;
         position: absolute;
@@ -302,15 +340,13 @@ footer {
         left: 0;
         right: 0;
         background: var(--white);
-        flex-direction: column;
         padding: 1rem;
-        text-align: center;
-        margin-left: 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .nav-toggle {
-        display: block;
-        margin-left: auto;
+    .nav-menu.active {
+        display: flex;
+        flex-direction: column;
     }
 
     .book-showcase {
@@ -1145,4 +1181,43 @@ html {
 .grid-view .media-card {
     display: flex;
     flex-direction: column;
+}
+
+.form-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    display: none;
+}
+
+.form-message.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.form-message.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.spinner {
+    margin-left: 0.5rem;
+}
+
+.fallback-icon {
+    display: none;
+}
+
+.fas.fa-bars {
+    font-size: 24px;
+}
+
+/* Fallback if Font Awesome fails */
+.fas.fa-bars:not(:defined) + .fallback-icon {
+    display: inline-block;
+    font-size: 24px;
 } 
