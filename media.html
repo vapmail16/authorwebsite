@@ -6,20 +6,25 @@
     <title>Media Coverage - Vikkas Arun Pareek</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="mediaData.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-brand">
-            <a href="index.html">Vikkas Arun Pareek</a>
+            <span>Vikkas Arun Pareek</span>
         </div>
         <button class="nav-toggle">
             <span class="hamburger"></span>
         </button>
         <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
             <li><a href="https://www.occultdiy.com/" target="_blank">OccultDIY</a></li>
             <li><a href="index.html#books">Books</a></li>
             <li><a href="index.html#blog">Blog</a></li>
+            <li><a href="writings.html">Writings</a></li>
             <li><a href="media.html">Media</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -30,16 +35,34 @@
     <section class="media-section">
         <div class="container">
             <h1>Media Coverage</h1>
-            <div class="media-filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="blogs">Blogs</button>
-                <button class="filter-btn" data-filter="social">Social Media</button>
-                <button class="filter-btn" data-filter="news">News</button>
-                <button class="filter-btn" data-filter="hindiNews">Hindi News</button>
-                <button class="filter-btn" data-filter="printMedia">Print Media</button>
-                <button class="filter-btn" data-filter="classifieds">Classifieds</button>
-                <button class="filter-btn" data-filter="otherClassifieds">More Classifieds</button>
-                <button class="filter-btn" data-filter="otherPlatforms">Other Platforms</button>
+            <div class="media-controls">
+                <div class="media-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="blogs">Blogs</button>
+                    <button class="filter-btn" data-filter="social">Social Media</button>
+                    <button class="filter-btn" data-filter="news">News</button>
+                    <button class="filter-btn" data-filter="hindiNews">Hindi News</button>
+                    <button class="filter-btn" data-filter="printMedia">Print Media</button>
+                    <button class="filter-btn" data-filter="classifieds">Classifieds</button>
+                    <button class="filter-btn" data-filter="otherClassifieds">More Classifieds</button>
+                    <button class="filter-btn" data-filter="otherPlatforms">Other Platforms</button>
+                </div>
+                <div class="media-sort">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" onchange="handleSort(this.value)">
+                        <option value="date">Most Recent</option>
+                        <option value="popular">Most Popular</option>
+                        <option value="title">Title (A-Z)</option>
+                    </select>
+                </div>
+                <div class="view-options">
+                    <button onclick="toggleView('grid')" class="view-btn" title="Grid View">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button onclick="toggleView('list')" class="view-btn" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
             </div>
             <div class="media-grid">
                 <!-- Content will be loaded dynamically -->
@@ -70,9 +93,5 @@
             <p>&copy; 2024 Vikkas Arun Pareek. All rights reserved.</p>
         </div>
     </footer>
-
-    <script src="config.js"></script>
-    <script src="mediaData.js"></script>
-    <script src="script.js"></script>
 </body>
 </html> 

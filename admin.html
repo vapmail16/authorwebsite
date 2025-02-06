@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Content Management</title>
+    <link rel="stylesheet" href="./admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="google-signin-client_id" content="772572080147-k7a2ur0rms5euhsaa2917aahvsu88c2i.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>Content Management</h1>
+            <div class="auth-section">
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <button onclick="signOut()" class="signout-btn" style="display: none;">Sign Out</button>
+            </div>
+            <nav class="admin-nav">
+                <button class="tab-button active" data-tab="media">Media Links</button>
+                <button class="tab-button" data-tab="writings">Writings Links</button>
+                <button class="tab-button" data-tab="seo">SEO Management</button>
+            </nav>
+        </header>
+
+        <!-- Media Links Section -->
+        <section id="media-section" class="content-section active">
+            <h2>Add New Media Link</h2>
+            <form id="media-form" class="content-form">
+                <div class="form-group">
+                    <label for="media-title">Title</label>
+                    <input type="text" id="media-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="media-url">URL</label>
+                    <input type="url" id="media-url" required>
+                </div>
+                <div class="form-group">
+                    <label for="media-category">Category</label>
+                    <select id="media-category" required>
+                        <option value="">Select Category</option>
+                        <option value="blogs">Blogs</option>
+                        <option value="social">Social Media</option>
+                        <option value="news">News</option>
+                        <option value="hindiNews">Hindi News</option>
+                        <option value="printMedia">Print Media</option>
+                        <option value="classifieds">Classifieds</option>
+                        <option value="otherClassifieds">More Classifieds</option>
+                        <option value="otherPlatforms">Other Platforms</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="media-date">Date</label>
+                    <input type="date" id="media-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="media-description">Description</label>
+                    <textarea id="media-description" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Add Media Link</button>
+            </form>
+
+            <div class="content-list">
+                <h3>Existing Media Links</h3>
+                <div id="media-links-list" class="links-list"></div>
+            </div>
+        </section>
+
+        <!-- Writings Section -->
+        <section id="writings-section" class="content-section">
+            <h2>Add New Writing</h2>
+            <form id="writings-form" class="content-form">
+                <div class="form-group">
+                    <label for="writing-title">Title</label>
+                    <input type="text" id="writing-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="writing-url">URL</label>
+                    <input type="url" id="writing-url" required>
+                </div>
+                <div class="form-group">
+                    <label for="writing-category">Category</label>
+                    <select id="writing-category" required>
+                        <option value="">Select Category</option>
+                        <option value="articles">News Articles</option>
+                        <option value="stories">Stories</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="writing-publication">Publication</label>
+                    <input type="text" id="writing-publication" required>
+                </div>
+                <div class="form-group">
+                    <label for="writing-date">Date</label>
+                    <input type="date" id="writing-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="writing-description">Description</label>
+                    <textarea id="writing-description" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Add Writing</button>
+            </form>
+
+            <div class="content-list">
+                <h3>Existing Writings</h3>
+                <div id="writings-links-list" class="links-list"></div>
+            </div>
+        </section>
+
+        <!-- SEO Management Section -->
+        <section id="seo-section" class="content-section">
+            <h2>SEO Management</h2>
+            
+            <!-- Keywords Management -->
+            <div class="seo-keywords">
+                <h3>Keywords Management</h3>
+                <form id="keyword-form" class="content-form">
+                    <div class="form-group">
+                        <label for="page-select">Select Page</label>
+                        <select id="page-select" required>
+                            <option value="home">Home Page</option>
+                            <option value="about">About Page</option>
+                            <option value="media">Media Page</option>
+                            <option value="writings">Writings Page</option>
+                            <option value="contact">Contact Page</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="keyword-type">Keyword Type</label>
+                        <select id="keyword-type" required>
+                            <option value="primary">Primary Keywords</option>
+                            <option value="secondary">Secondary Keywords</option>
+                            <option value="long-tail">Long-tail Keywords</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="keywords">Keywords (comma-separated)</label>
+                        <textarea id="keywords" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Keywords</button>
+                </form>
+            </div>
+            
+            <!-- SEO Analytics -->
+            <div class="seo-analytics">
+                <h3>SEO Performance</h3>
+                <div class="analytics-filters">
+                    <select id="analytics-page">
+                        <option value="all">All Pages</option>
+                        <option value="home">Home Page</option>
+                        <option value="about">About Page</option>
+                        <option value="media">Media Page</option>
+                        <option value="writings">Writings Page</option>
+                        <option value="contact">Contact Page</option>
+                    </select>
+                    <select id="analytics-period">
+                        <option value="7">Last 7 days</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                    </select>
+                </div>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h4>Search Impressions</h4>
+                        <div id="impressions-chart" class="chart"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Click-through Rate</h4>
+                        <div id="ctr-chart" class="chart"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Top Keywords</h4>
+                        <div id="keywords-list" class="data-list"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Page Performance</h4>
+                        <div id="page-performance" class="data-list"></div>
+                    </div>
+                </div>
+                <!-- Technical SEO Checks Section -->
+                <div class="technical-seo">
+                    <h3>Technical SEO Checks</h3>
+                    <div class="check-controls">
+                        <button onclick="technicalSEO.runAllChecks()" class="check-btn">
+                            Run All Checks
+                        </button>
+                        <select id="check-filter">
+                            <option value="all">All Issues</option>
+                            <option value="critical">Critical Issues</option>
+                            <option value="warning">Warnings</option>
+                            <option value="passed">Passed Checks</option>
+                        </select>
+                    </div>
+                    <div id="technical-checks" class="checks-grid"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="admin.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="config.js"></script>
+</body>
+</html> 

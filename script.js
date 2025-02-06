@@ -74,6 +74,27 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactForm) {
         console.log('Contact form found');
         contactForm.addEventListener('submit', handleFormSubmit);
+
+        // Handle book inquiry parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookParam = urlParams.get('book');
+        
+        if (bookParam === 'blue-flamingo') {
+            // Pre-fill subject field if it exists
+            const subjectField = contactForm.querySelector('[name="subject"]');
+            if (subjectField) {
+                subjectField.value = 'Inquiry: The Adventures of Blue Flamingo - Personalised Book';
+            }
+            
+            // Add a message at the top of the form
+            const formHeader = document.createElement('div');
+            formHeader.className = 'form-header';
+            formHeader.innerHTML = `
+                <h3>Inquiry about "The Adventures of Blue Flamingo - Personalised"</h3>
+                <p>Please fill out the form below to learn more about personalizing this book for your child.</p>
+            `;
+            contactForm.insertBefore(formHeader, contactForm.firstChild);
+        }
     } else {
         console.log('Contact form not found');
     }
@@ -122,6 +143,26 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Set active state in navigation
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    
+    navLinks.forEach(link => {
+        const linkPath = link.getAttribute('href');
+        if (linkPath === currentPage || 
+            (currentPage === 'index.html' && linkPath === './') ||
+            (linkPath.includes(currentPage))) {
+            link.classList.add('active');
+        }
+        
+        // Handle hash links on index page
+        if (currentPage === 'index.html' && linkPath.startsWith('#')) {
+            if (window.location.hash === linkPath) {
+                link.classList.add('active');
+            }
+        }
+    });
 });
 
 // Add these variables at the top of your script
@@ -334,102 +375,139 @@ const mediaPerPage = 12;
 
 function displayMediaItems(page, filter = 'all') {
     const mediaGrid = document.querySelector('.media-grid');
-    let allMedia = [];
-    
+    if (!mediaGrid) return;
+
+    let itemsToShow = [];
     if (filter === 'all') {
-        allMedia = [
-            ...mediaData.blogs,
-            ...mediaData.social,
-            ...mediaData.news,
-            ...mediaData.hindiNews,
-            ...mediaData.printMedia,
-            ...mediaData.classifieds,
-            ...mediaData.otherClassifieds,
-            ...mediaData.otherPlatforms
-        ];
+        Object.values(mediaData).forEach(items => {
+            itemsToShow = [...itemsToShow, ...items];
+        });
     } else {
-        allMedia = mediaData[filter] || [];
+        itemsToShow = mediaData[filter] || [];
     }
 
+    // Pagination
     const startIndex = (page - 1) * mediaPerPage;
     const endIndex = startIndex + mediaPerPage;
-    const itemsToShow = allMedia.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(allMedia.length / mediaPerPage);
+    const totalPages = Math.ceil(itemsToShow.length / mediaPerPage);
 
-    // Clear existing content, pagination, and count
+    // Sort items by date
+    itemsToShow.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date) : new Date(0);
+        const dateB = b.date ? new Date(b.date) : new Date(0);
+        return dateB - dateA;
+    });
+
+    // Get current page items
+    const currentItems = itemsToShow.slice(startIndex, endIndex);
+
+    // Clear grid
     mediaGrid.innerHTML = '';
-    const existingPagination = document.querySelector('.pagination');
-    if (existingPagination) {
-        existingPagination.remove();
-    }
-    const existingCount = document.querySelector('.media-count');
-    if (existingCount) {
-        existingCount.remove();
-    }
 
-    // Add media items
-    itemsToShow.forEach(item => {
+    // Add count text
+    const countText = document.createElement('div');
+    countText.className = 'media-count';
+    countText.textContent = `Showing ${startIndex + 1}-${Math.min(endIndex, itemsToShow.length)} of ${itemsToShow.length} items`;
+    mediaGrid.appendChild(countText);
+
+    // Create container for media cards
+    const cardsContainer = document.createElement('div');
+    cardsContainer.className = 'media-cards-container';
+    mediaGrid.appendChild(cardsContainer);
+
+    // Add media cards
+    currentItems.forEach(item => {
         const card = `
             <div class="media-card" data-category="${getCategory(item.platform)}">
-                ${item.image ? `
-                    <div class="media-image">
-                        <img src="${item.image}" alt="${item.title}" 
-                            onerror="this.onerror=null; this.src='images/placeholder.jpg';">
-                    </div>
-                ` : ''}
                 <div class="media-content">
-                    <span class="media-platform">${item.platform}</span>
+                    <span class="media-platform">${item.platform || 'Blog'}</span>
                     <h3 class="media-title">${item.title}</h3>
-                    <a href="${item.url}" class="media-link" target="_blank">Read Article →</a>
+                    <p class="media-description">${item.description || ''}</p>
+                    <div class="media-metadata">
+                        <span class="media-date">${item.date ? formatDate(item.date) : ''}</span>
+                    </div>
+                    <a href="${item.url}" class="media-link" target="_blank" rel="noopener">
+                        Read More →
+                    </a>
                 </div>
             </div>
         `;
-        mediaGrid.insertAdjacentHTML('beforeend', card);
+        cardsContainer.insertAdjacentHTML('beforeend', card);
     });
 
-    // Add pagination after the grid
-    const pagination = createMediaPagination(page, totalPages, filter);
-    mediaGrid.insertAdjacentHTML('afterend', pagination);
-
-    // Add count message after pagination
-    const countMessage = `
-        <div class="media-count">
-            <p>Showing ${startIndex + 1}-${Math.min(endIndex, allMedia.length)} of ${allMedia.length} items</p>
-        </div>
-    `;
-    document.querySelector('.pagination').insertAdjacentHTML('afterend', countMessage);
+    // Add pagination if needed
+    if (totalPages > 1) {
+        const pagination = document.createElement('div');
+        pagination.className = 'pagination';
+        
+        // Previous button
+        const prevButton = document.createElement('button');
+        prevButton.className = 'pagination-button';
+        prevButton.textContent = '←';
+        prevButton.disabled = page === 1;
+        prevButton.addEventListener('click', () => displayMediaItems(page - 1, filter));
+        pagination.appendChild(prevButton);
+        
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.className = `pagination-button ${i === page ? 'active' : ''}`;
+            pageButton.textContent = i;
+            pageButton.addEventListener('click', () => displayMediaItems(i, filter));
+            pagination.appendChild(pageButton);
+        }
+        
+        // Next button
+        const nextButton = document.createElement('button');
+        nextButton.className = 'pagination-button';
+        nextButton.textContent = '→';
+        nextButton.disabled = page === totalPages;
+        nextButton.addEventListener('click', () => displayMediaItems(page + 1, filter));
+        pagination.appendChild(nextButton);
+        
+        mediaGrid.appendChild(pagination);
+    }
 }
 
-function createMediaPagination(currentPage, totalPages, filter) {
-    let buttons = `<div class="pagination">`;
-    
-    // Previous button
-    buttons += `<button class="pagination-button" 
-        onclick="changePage(${currentPage - 1}, '${filter}')"
-        ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+// Helper function to format date
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
 
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        buttons += `<button class="pagination-button ${currentPage === i ? 'active' : ''}" 
-            onclick="changePage(${i}, '${filter}')">${i}</button>`;
+// Add event listeners for filter buttons
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded'); // Debug log
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    if (!filterButtons.length) {
+        console.error('No filter buttons found');
+        return;
     }
 
-    // Next button
-    buttons += `<button class="pagination-button" 
-        onclick="changePage(${currentPage + 1}, '${filter}')"
-        ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
-    
-    buttons += `</div>`;
-    return buttons;
-}
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            console.log('Filter clicked:', filter); // Debug log
+            
+            // Update active state
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Display filtered items
+            displayMediaItems(1, filter);
+        });
+    });
 
-function changePage(page, filter) {
-    currentMediaPage = page;
-    displayMediaItems(page, filter);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+    // Initial display
+    displayMediaItems(1, 'all');
+});
 
 function getCategory(platform) {
+    // Handle undefined or null platform
+    if (!platform) {
+        return 'blogs';  // Default category
+    }
+
     // Social media platforms
     const socialPlatforms = [
         'Medium', 'LinkedIn', 'Reddit', 'Facebook', 'Twitter', 'X', 
@@ -486,29 +564,8 @@ function getCategory(platform) {
     }
 }
 
-// Add meta scraping function
-async function fetchMetaImage(url) {
-    try {
-        const response = await fetch(`/api/scrape?url=${encodeURIComponent(url)}`);
-        const data = await response.json();
-        return data.image;
-    } catch (error) {
-        console.error('Error fetching meta image:', error);
-        return null;
-    }
-}
-
 // Update initializeMediaPage to include image fetching
 async function initializeMediaPage() {
-    // Fetch meta images for items that don't have them
-    for (const category in mediaData) {
-        for (const item of mediaData[category]) {
-            if (!item.image) {
-                item.image = await fetchMetaImage(item.url);
-            }
-        }
-    }
-    
     displayMediaItems(1, 'all');
     
     // Add event listeners for filter buttons
@@ -521,4 +578,177 @@ async function initializeMediaPage() {
             displayMediaItems(1, filter);
         });
     });
-} 
+}
+
+// Add to your existing script.js
+let currentWritingsPage = 1;
+const writingsPerPage = 12;
+
+function displayWritingItems(page = 1, filter = 'all') {
+    const writingsGrid = document.querySelector('.writings-grid');
+    if (!writingsGrid) return;
+
+    // Initialize empty array for writing items
+    const writingItems = [];
+
+    // Filter items
+    let filteredItems = writingItems;
+    if (filter !== 'all') {
+        filteredItems = writingItems.filter(item => item.category === filter);
+    }
+
+    // Display empty state message
+    writingsGrid.innerHTML = `
+        <div class="empty-state">
+            <p>No articles available yet.</p>
+        </div>
+    `;
+}
+
+// Initialize writings page if we're on it
+const writingsGrid = document.querySelector('.writings-grid');
+const isWritingsPage = window.location.pathname.includes('writings.html');
+
+if (writingsGrid && isWritingsPage) {
+    displayWritingItems(1, 'all');
+    
+    // Add filter button listeners
+    const filterButtons = document.querySelectorAll('.writings-filters .filter-btn');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const filter = button.getAttribute('data-filter');
+            displayWritingItems(1, filter);
+        });
+    });
+}
+
+// Add this to your script.js or in a <script> tag
+const authorSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://www.vikkasarunpareek.com/#author",
+    "name": "Vikkas Arun Pareek",
+    "alternateName": "VAP",
+    "nationality": "British-Indian",
+    "description": "British-Indian author, numerologist, and IT professional",
+    "image": "https://www.vikkasarunpareek.com/images/vikkas-profile.png",
+    "url": "https://www.vikkasarunpareek.com",
+    "sameAs": [
+        "https://www.facebook.com/authorvikkasarunpareek/",
+        "https://twitter.com/vapmail16",
+        "https://www.instagram.com/authorvikkasarunpareek/",
+        "https://www.goodreads.com/author/show/14430815.Vikkas_Arun_Pareek"
+    ],
+    "jobTitle": "Author",
+    "worksFor": {
+        "@type": "Organization",
+        "name": "Self-employed"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Vikkas Arun Pareek"
+    }
+};
+
+const bookSchema = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    "name": "Letters to My Mother",
+    "author": {
+        "@type": "Person",
+        "@id": "https://www.vikkasarunpareek.com/#author"
+    },
+    "datePublished": "2023-08",
+    "description": "An epistolary drama fiction exploring mother-daughter relationships",
+    "publisher": "Vishwakarma Publishers",
+    "inLanguage": "English",
+    "isbn": "YOUR-ISBN-NUMBER"
+};
+
+// Add the schema to the page
+const script = document.createElement('script');
+script.type = "application/ld+json";
+script.text = JSON.stringify([authorSchema, bookSchema]);
+document.head.appendChild(script);
+
+// Add to your script.js
+function trackLinkClick(category, title) {
+    // If using Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'click', {
+            'event_category': category,
+            'event_label': title,
+            'transport_type': 'beacon'
+        });
+    }
+    
+    // Store in localStorage for popularity tracking
+    const clickData = JSON.parse(localStorage.getItem('linkClicks') || '{}');
+    const linkKey = `${category}-${title}`;
+    clickData[linkKey] = (clickData[linkKey] || 0) + 1;
+    localStorage.setItem('linkClicks', JSON.stringify(clickData));
+}
+
+function estimateReadingTime(text) {
+    const wordsPerMinute = 200;
+    const words = text.trim().split(/\s+/).length;
+    return Math.ceil(words / wordsPerMinute);
+}
+
+// Add sorting options
+function sortMediaItems(items, sortBy = 'date') {
+    switch(sortBy) {
+        case 'popular':
+            const clickData = JSON.parse(localStorage.getItem('linkClicks') || '{}');
+            return items.sort((a, b) => {
+                const aClicks = clickData[`${a.category}-${a.title}`] || 0;
+                const bClicks = clickData[`${b.category}-${b.title}`] || 0;
+                return bClicks - aClicks;
+            });
+        case 'date':
+            return items.sort((a, b) => new Date(b.date) - new Date(a.date));
+        case 'title':
+            return items.sort((a, b) => a.title.localeCompare(b.title));
+        default:
+            return items;
+    }
+}
+
+function updatePagination(currentPage, totalPages, filter) {
+    const paginationContainer = document.querySelector('.pagination');
+    paginationContainer.innerHTML = '';
+
+    // Add rel attributes for SEO
+    if (currentPage > 1) {
+        paginationContainer.innerHTML += `
+            <a href="?page=${currentPage - 1}&filter=${filter}" 
+               rel="prev" 
+               class="pagination-link">
+                Previous
+            </a>
+        `;
+    }
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        paginationContainer.innerHTML += `
+            <a href="?page=${i}&filter=${filter}" 
+               class="pagination-link ${i === currentPage ? 'active' : ''}"
+               ${i === currentPage ? 'aria-current="page"' : ''}>
+                ${i}
+            </a>
+        `;
+    }
+
+    if (currentPage < totalPages) {
+        paginationContainer.innerHTML += `
+            <a href="?page=${currentPage + 1}&filter=${filter}" 
+               rel="next" 
+               class="pagination-link">
+                Next
+            </a>
+        `;
+    }
+}

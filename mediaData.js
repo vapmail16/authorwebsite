@@ -1,9 +1,18 @@
 const mediaData = {
     blogs: [
         {
+            title: "Sample Blog Post",
+            url: "https://example.com/blog",
+            date: "2024-03-20",
+            description: "Sample description",
+            platform: "Blog"
+        },
+        {
             platform: "Asian News Agency Blog",
             title: "Books are important for mind, heart and soul",
-            url: "https://asiannewsagency4.blogspot.com/2024/09/books-are-important-for-mind-heart-and.html"
+            url: "https://asiannewsagency4.blogspot.com/2024/09/books-are-important-for-mind-heart-and.html",
+            date: "2024-09-10",
+            description: "An article about the importance of books"
         },
         {
             platform: "Asian News Agency BCZ",
@@ -112,8 +121,7 @@ const mediaData = {
         {
             platform: "DNA News",
             title: "Celebrating Literary Success: A Double Milestone for Author Vikkas Arun Pareek",
-            url: "https://dnanews.in/celebrating-literary-success-a-double-milestone-for-author-vikkas-arun-pareek",
-            image: null // Will be populated dynamically
+            url: "https://dnanews.in/celebrating-literary-success-a-double-milestone-for-author-vikkas-arun-pareek"
         },
         {
             platform: "Smart Halchal",
@@ -496,4 +504,14 @@ const mediaData = {
             url: "https://epaper.thestatesman.com/c/75713007"
         }
     ]
-}; 
+};
+
+if (typeof mediaData === 'undefined' || !mediaData) {
+    console.error('Media data failed to load or is empty');
+}
+
+Object.entries(mediaData).forEach(([category, items]) => {
+    if (!Array.isArray(items)) {
+        console.error(`Invalid data structure for category: ${category}`);
+    }
+}); 

@@ -1,11 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vikkas Arun Pareek - Official Website</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Vikkas Arun Pareek - Author, Numerologist, IT Professional</title>
+    <meta name="title" content="Vikkas Arun Pareek - Author, Numerologist, IT Professional">
+    <meta name="description" content="Official website of Vikkas Arun Pareek, British-Indian author of 'Letters to My Mother' and other acclaimed books. Explore his works, numerology insights, and more.">
+    <meta name="keywords" content="Vikkas Arun Pareek, Letters to My Mother, Indian Author, Numerologist, Blue Flamingo Series, British Indian Writer">
+    <meta name="author" content="Vikkas Arun Pareek">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.vikkasarunpareek.com/">
+    <meta property="og:title" content="Vikkas Arun Pareek - Author, Numerologist, IT Professional">
+    <meta property="og:description" content="Official website of Vikkas Arun Pareek, British-Indian author of 'Letters to My Mother' and other acclaimed books.">
+    <meta property="og:image" content="images/vikkas-profile.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.vikkasarunpareek.com/">
+    <meta property="twitter:title" content="Vikkas Arun Pareek - Author, Numerologist, IT Professional">
+    <meta property="twitter:description" content="Official website of Vikkas Arun Pareek, British-Indian author of 'Letters to My Mother' and other acclaimed books.">
+    <meta property="twitter:image" content="images/vikkas-profile.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.vikkasarunpareek.com/" />
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add preload for critical resources -->
+    <link rel="preload" href="./styles.css" as="style">
+    <!-- Remove font preload until we have the actual font file -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="alternate" hreflang="en" href="https://www.vikkasarunpareek.com/" />
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Person",
+        "name": "Vikkas Arun Pareek",
+        "url": "https://www.vikkasarunpareek.com",
+        "sameAs": [
+            "https://www.facebook.com/authorvikkasarunpareek/",
+            "https://twitter.com/vapmail16",
+            "https://www.instagram.com/authorvikkasarunpareek/",
+            "https://www.youtube.com/channel/UCeT_0yzMsDUcuvcS4qBE4HQ",
+            "https://www.goodreads.com/author/show/14430815.Vikkas_Arun_Pareek"
+        ],
+        "jobTitle": ["Author", "Numerologist", "IT Professional"],
+        "image": "images/vikkas-profile.png",
+        "description": "British-Indian author of 'Letters to My Mother' and other acclaimed books"
+    }
+    </script>
 </head>
 <body>
     <!-- Navigation -->
@@ -17,9 +67,11 @@
             <span class="hamburger"></span>
         </button>
         <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
             <li><a href="https://www.occultdiy.com/" target="_blank">OccultDIY</a></li>
             <li><a href="#books">Books</a></li>
             <li><a href="#blog">Blog</a></li>
+            <li><a href="writings.html">Writings</a></li>
             <li><a href="media.html">Media</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -29,7 +81,10 @@
     <!-- Hero Section -->
     <header class="hero">
         <div class="hero-content">
-            <img src="images/vikkas-profile.png" alt="Vikkas Arun Pareek" class="author-image">
+            <img src="images/vikkas-profile.png" 
+                 alt="Vikkas Arun Pareek - Author and Numerologist"
+                 loading="lazy"
+                 class="author-image">
             <h1>Vikkas Arun Pareek</h1>
             <p class="tagline">Numerologist, Author, IT, Father</p>
         </div>
@@ -158,7 +213,7 @@
                         <h3>The Adventures of Blue Flamingo with Your Kid's Name</h3>
                         <p class="age-group">Age 3-7</p>
                         <p>Be part of the story! Your kid's name and picture will be part of the book. A personalized adventure that makes your child the star of the story.</p>
-                        <a href="#contact" class="cta-button">Contact for Details</a>
+                        <a href="contact.html?book=blue-flamingo" class="cta-button">Contact for Details</a>
                     </div>
                 </div>
             </div>
