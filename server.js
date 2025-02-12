@@ -1,7 +1,16 @@
 const express = require('express');
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const cheerio = require('cheerio');
+const path = require('path');
+
 const app = express();
+
+// Enable CORS for development
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 app.get('/api/scrape', async (req, res) => {
     try {
@@ -18,10 +27,15 @@ app.get('/api/scrape', async (req, res) => {
         
         res.json({ image });
     } catch (error) {
+        console.error('Scrape error:', error);
         res.status(500).json({ error: error.message });
     }
 });
 
-app.listen(3000, () => {
-    console.log('Proxy server running on port 3000');
+// Serve static files
+app.use(express.static(path.join(__dirname)));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 }); 

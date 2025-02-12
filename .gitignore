@@ -2,18 +2,15 @@
 firebase-config.js
 **/firebase-config.js
 config.js
+config.keys.js
 
 # Dependencies
 node_modules/
+.firebase/
 
 # Environment files
 .env
 .env.local
-config.keys.js
-
-# Build files
-dist/
-build/
 
 # IDE files
 .vscode/
@@ -24,6 +21,5 @@ build/
 Thumbs.db
 
 # Firebase
-firebase-config.js
-functions/node_modules/
 .firebaserc
+firebase-debug.log

@@ -250,6 +250,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    initializeAppsPage();
 });
 
 // Add these variables at the top of your script
@@ -840,53 +842,185 @@ function updatePagination(currentPage, totalPages, filter) {
     }
 }
 
+// Add this at the top of script.js
+function waitForFirebase() {
+    return new Promise((resolve) => {
+        if (window.db) {
+            resolve();
+        } else {
+            const checkFirebase = setInterval(() => {
+                if (window.db) {
+                    clearInterval(checkFirebase);
+                    resolve();
+                }
+            }, 100);
+        }
+    });
+}
+
+// Update the testFirebase function
 async function testFirebase() {
     try {
         console.log('Testing Firebase connection...');
         
-        // Test newsletter subscription
-        const testSubscriber = await window.db.collection('subscribers').add({
-            email: 'test@example.com',
-            subscriptionDate: firebase.firestore.FieldValue.serverTimestamp(),
-            status: 'test'
-        });
-        console.log('Test subscriber added with ID:', testSubscriber.id);
-
-        // Test contact form
-        const testMessage = await window.db.collection('contactMessages').add({
-            name: 'Test User',
-            email: 'test@example.com',
-            message: 'This is a test message',
-            date: firebase.firestore.FieldValue.serverTimestamp(),
-            status: 'test'
-        });
-        console.log('Test message added with ID:', testMessage.id);
+        // Wait for Firebase to initialize
+        await waitForFirebase();
+        
+        // Check if Firebase is initialized
+        if (!window.db) {
+            throw new Error('Firebase is not properly initialized');
+        }
+        
+        // Test collection access
+        const testDoc = await window.db.collection('apps').get();
+        console.log('Successfully accessed apps collection:', testDoc.size);
 
         alert('Firebase test successful! Check console for details.');
         return true;
     } catch (error) {
         console.error('Firebase test failed:', error);
-        alert('Firebase test failed. Check console for details.');
+        alert(`Firebase test failed: ${error.message}`);
         return false;
     }
 }
 
-// Add test button (only in development)
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    const testButton = document.createElement('button');
-    testButton.textContent = 'Test Firebase Connection';
-    testButton.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 10px;
-        background: #3498db;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        z-index: 1000;
-    `;
-    testButton.onclick = testFirebase;
-    document.body.appendChild(testButton);
+// Update the loadApps function
+async function loadApps(category) {
+    try {
+        console.log('==== Starting loadApps for category:', category, '====');
+        
+        // Wait for Firebase to initialize
+        await waitForFirebase();
+        console.log('Firebase initialized:', !!window.db);
+        
+        // Map category names to container IDs
+        const containerMap = {
+            'Production': 'production-apps',
+            'Work in Progress': 'wip-apps',
+            'Wish List': 'wishlist-apps'
+        };
+        
+        const containerId = containerMap[category];
+        console.log('Container ID:', containerId);
+        console.log('Container exists:', !!document.getElementById(containerId));
+        const container = document.getElementById(containerId);
+        
+        if (!container) {
+            console.error(`Container not found for category: ${category}`);
+            return;
+        }
+
+        container.innerHTML = '<div class="loading-spinner"></div>';
+
+        // Build the query based on the data structure
+        const query = window.db.collection('apps')
+            .where('category', '==', category === 'Work in Progress' ? 'wip' : 
+                                    category === 'Production' ? 'production' : 
+                                    'wishlist')
+            .orderBy('createdAt', 'desc');
+
+        console.log('Executing query...');
+        const snapshot = await query.get();
+        
+        console.log('Query results:', {
+            size: snapshot.size,
+            empty: snapshot.empty,
+            docs: snapshot.docs.map(doc => ({
+                id: doc.id,
+                data: doc.data()
+            }))
+        });
+
+        if (snapshot.empty) {
+            container.innerHTML = `<p class="empty-message">No ${category} apps available yet.</p>`;
+            return;
+        }
+
+        let html = '';
+        snapshot.forEach(doc => {
+            const app = doc.data();
+            console.log('Processing app:', app);
+            html += `
+                <div class="app-card">
+                    ${app.image ? `<img src="${app.image}" alt="${app.title}" class="app-image">` : ''}
+                    <div class="app-content">
+                        <h3 class="app-title">${app.title || 'Untitled'}</h3>
+                        <p class="app-description">${app.description || 'No description available'}</p>
+                        <div class="app-technologies">
+                            ${app.technologies ? app.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('') : ''}
+                        </div>
+                        <div class="app-links">
+                            ${app.url ? `<a href="${app.url}" target="_blank" class="app-link">View App</a>` : ''}
+                            ${app.github ? `<a href="${app.github}" target="_blank" class="app-link">GitHub</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        console.log('Generated HTML length:', html.length);
+        container.innerHTML = html;
+        console.log('HTML inserted into container');
+
+    } catch (error) {
+        console.error('Error loading apps:', error);
+        console.error('Full error details:', {
+            message: error.message,
+            code: error.code,
+            stack: error.stack
+        });
+        container.innerHTML = `<div class="error-message">Error loading apps: ${error.message}</div>`;
+    }
+}
+
+// Initialize apps page if we're on it
+if (window.location.pathname.includes('apps.html')) {
+    console.log('==== Initializing Apps Page ====');
+    const checkFirebase = setInterval(() => {
+        console.log('Checking Firebase initialization...');
+        if (window.db) {
+            console.log('Firebase initialized, clearing interval');
+            clearInterval(checkFirebase);
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM loaded, starting app loading');
+                const categories = ['Production', 'Work in Progress', 'Wish List'];
+                categories.forEach(category => {
+                    loadApps(category);
+                });
+            });
+        }
+    }, 100);
+}
+
+// Add this to your existing script.js
+function initializeAppsPage() {
+    // Check if we're on the apps page
+    if (!document.querySelector('.apps-section')) return;
+
+    // Show empty states for each section
+    const sections = ['Production', 'Work in Progress', 'Wish List'];
+    sections.forEach(section => {
+        const container = document.getElementById(`${section}-apps`);
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-code"></i>
+                    <p>No ${section === 'Work in Progress' ? 'work in progress' : section} apps available yet.</p>
+                    ${section === 'Wish List' ? '<p>Submit your idea below!</p>' : ''}
+                </div>
+            `;
+        }
+    });
+
+    // Initialize idea form submission
+    const ideaForm = document.getElementById('ideaForm');
+    if (ideaForm) {
+        ideaForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const messageDiv = document.getElementById('ideaMessage');
+            messageDiv.textContent = 'Thank you for your idea! We will review it soon.';
+            messageDiv.className = 'form-message success';
+            this.reset();
+        });
+    }
 }

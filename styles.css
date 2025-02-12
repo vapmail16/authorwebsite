@@ -1043,9 +1043,21 @@ html {
 /* Writings Section Styles */
 .empty-state {
     text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-style: italic;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.empty-state i {
+    font-size: 2rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #6c757d;
+    margin: 0.5rem 0;
 }
 
 .writings-section {
@@ -1220,4 +1232,121 @@ html {
 .fas.fa-bars:not(:defined) + .fallback-icon {
     display: inline-block;
     font-size: 24px;
+}
+
+/* Apps Section Styles */
+.apps-section {
+    padding: 120px 0 5rem;
+}
+
+.apps-intro {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+.whatsapp-group {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: #f0f8ff;
+    border-radius: 8px;
+}
+
+.whatsapp-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.whatsapp-button:hover {
+    background: #128C7E;
+}
+
+.apps-category {
+    margin-bottom: 4rem;
+}
+
+.apps-grid {
+    min-height: 200px;
+    display: grid;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.app-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+}
+
+.app-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.app-content {
+    padding: 1.5rem;
+}
+
+.app-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.app-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.app-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.app-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* Ensure section headings are visible */
+.apps-category h2 {
+    color: var(--primary-color);
+    margin: 3rem 0 1rem;
+}
+
+/* Style the first heading differently */
+.apps-section h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+}
+
+.tech-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 2px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.app-technologies {
+    margin: 8px 0;
 } 

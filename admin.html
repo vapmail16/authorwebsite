@@ -3,23 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <title>Admin Panel - Content Management</title>
     <link rel="stylesheet" href="./admin-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <meta name="google-signin-client_id" content="772572080147-k7a2ur0rms5euhsaa2917aahvsu88c2i.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body>
-    <div class="admin-container">
+    <div id="loadingState" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div style="text-align: center;">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+    <div class="login-status">
+        <div id="loginMessage" style="display: none;">
+            <span id="userEmail"></span>
+            <span class="status-dot"></span>
+        </div>
+    </div>
+    <div class="auth-section" style="text-align: center; margin: 20px;">
+        <button id="signInBtn" class="signin-btn">Sign in with Google</button>
+    </div>
+    <div class="admin-container" style="display: none;">
+        <!-- Firebase Test Button (only in development) -->
+        <div id="firebaseTest" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;"></div>
         <header class="admin-header">
             <h1>Content Management</h1>
             <div class="auth-section">
-                <div class="g-signin2" data-onsuccess="onSignIn"></div>
                 <button onclick="signOut()" class="signout-btn" style="display: none;">Sign Out</button>
             </div>
             <nav class="admin-nav">
                 <button class="tab-button active" data-tab="media">Media Links</button>
                 <button class="tab-button" data-tab="writings">Writings Links</button>
+                <button class="tab-button" data-tab="apps">Apps</button>
                 <button class="tab-button" data-tab="seo">SEO Management</button>
             </nav>
         </header>
@@ -105,6 +121,74 @@
             <div class="content-list">
                 <h3>Existing Writings</h3>
                 <div id="writings-links-list" class="links-list"></div>
+            </div>
+        </section>
+
+        <!-- Apps Management Section -->
+        <section id="apps-section" class="content-section">
+            <h2>Add New App</h2>
+            <form id="app-form" class="content-form">
+                <div id="form-loading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>Uploading... Please wait</p>
+                </div>
+                <div class="form-group">
+                    <label for="app-title">App Title</label>
+                    <input type="text" id="app-title">
+                </div>
+                <div class="form-group">
+                    <label for="app-description">Description</label>
+                    <textarea id="app-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="app-category">Category</label>
+                    <select id="app-category" required>
+                        <option value="">Select Category</option>
+                        <option value="Production">Production</option>
+                        <option value="Work in Progress">Work in Progress</option>
+                        <option value="Wish List">Wish List</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="app-image">App Image</label>
+                    <input type="file" id="app-image" accept="image/*">
+                    <div class="image-preview" id="image-preview"></div>
+                    <small>Recommended size: 800x400px. Max size: 2MB</small>
+                </div>
+                <div class="form-group">
+                    <label for="app-url">Live App URL</label>
+                    <input type="url" id="app-url">
+                    <small>Leave empty if not deployed yet</small>
+                </div>
+                <div class="form-group">
+                    <label for="app-github">GitHub URL</label>
+                    <input type="url" id="app-github">
+                    <small>Leave empty if private repository</small>
+                </div>
+                <div class="form-group">
+                    <label for="app-tech">Technologies Used</label>
+                    <input type="text" id="app-tech" placeholder="e.g., React, Node.js, Firebase">
+                </div>
+                <div class="form-group">
+                    <label for="app-status">Development Status</label>
+                    <select id="app-status" required>
+                        <option value="completed">Completed</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="planned">Planned</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Add App</button>
+            </form>
+
+            <div class="content-list">
+                <h3>Existing Apps</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="production">Production</button>
+                    <button class="filter-btn" data-filter="wip">Work in Progress</button>
+                    <button class="filter-btn" data-filter="wishlist">Wish List</button>
+                </div>
+                <div id="apps-list" class="links-list"></div>
             </div>
         </section>
 
@@ -198,8 +282,22 @@
         </section>
     </div>
 
-    <script src="admin.js"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
+    <!-- Load configurations and SDKs first -->
     <script src="config.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Google APIs -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    
+    <!-- Admin Script -->
+    <script src="admin.js"></script>
 </body>
 </html> 
