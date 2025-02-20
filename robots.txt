@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Allow: /media.html
+Allow: /writings.html
+Allow: /about.html
+Allow: /contact.html
+Allow: /images/
+Disallow: /config.js
+Disallow: /mediaData.js
+Disallow: /*.json$
+
+Sitemap: https://www.vikkasarunpareek.com/sitemap.xml 

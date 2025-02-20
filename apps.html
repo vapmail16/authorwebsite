@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apps - Vikkas Arun Pareek</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    
+    <!-- Local data -->
+    <script src="appsData.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>Vikkas Arun Pareek</span>
+        </div>
+        <button class="nav-toggle">
+            <span class="hamburger">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+                <span class="fallback-icon">☰</span>
+            </span>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="https://www.occultdiy.com/" target="_blank">OccultDIY</a></li>
+            <li><a href="index.html#books">Books</a></li>
+            <li><a href="index.html#blog">Blog</a></li>
+            <li><a href="writings.html">Writings</a></li>
+            <li><a href="media.html">Media</a></li>
+            <li><a href="apps.html">Apps</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Apps Section -->
+    <section class="apps-section">
+        <div class="container">
+            <h1>My Applications</h1>
+            
+            <!-- Introduction -->
+            <div class="apps-intro">
+                <p>Welcome to my digital workshop where ideas transform into applications. Here you'll find a collection of software solutions I've developed, from web applications to mobile apps, each designed to solve specific problems and enhance user experiences.</p>
+                
+                <!-- WhatsApp Group Link -->
+                <div class="whatsapp-group">
+                    <h3>Join Our Developer Community</h3>
+                    <p>Connect with fellow developers, share ideas, and collaborate on projects!</p>
+                    <a href="https://chat.whatsapp.com/G9NYcfc9ABD9JbkdS0BCT7" class="whatsapp-button" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Join WhatsApp Group
+                    </a>
+                </div>
+            </div>
+
+            <!-- Production Apps -->
+            <section class="apps-category">
+                <h2>Production Apps</h2>
+                <div class="apps-grid" id="production-apps">
+                    <!-- Cards will be loaded dynamically -->
+                </div>
+                <div class="pagination" id="production-pagination"></div>
+            </section>
+
+            <!-- Work in Progress -->
+            <section class="apps-category">
+                <h2>Work in Progress Apps</h2>
+                <div class="apps-grid" id="wip-apps">
+                    <!-- Cards will be loaded dynamically -->
+                </div>
+                <div class="pagination" id="wip-pagination"></div>
+            </section>
+
+            <!-- Ideation -->
+            <section class="apps-category">
+                <h2>Wish List Apps</h2>
+                <div class="apps-grid" id="wishlist-apps">
+                    <!-- Cards will be loaded dynamically -->
+                </div>
+                <div class="pagination" id="wishlist-pagination"></div>
+            </section>
+
+            <!-- Submit Idea Section -->
+            <section class="submit-idea">
+                <h2>Submit an Idea / Let's Work Together</h2>
+                <form id="ideaForm" class="idea-form">
+                    <div class="form-group">
+                        <label for="idea-name">Your Name</label>
+                        <input type="text" id="idea-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idea-email">Your Email</label>
+                        <input type="email" id="idea-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idea-description">Your Idea</label>
+                        <textarea id="idea-description" name="description" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">
+                        <span class="button-text">Submit Idea</span>
+                        <span class="spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                    </button>
+                    <div id="ideaMessage" class="form-message"></div>
+                </form>
+            </section>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://www.facebook.com/authorvikkasarunpareek/" target="_blank" title="Facebook">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://x.com/vapmail16?mx=2" target="_blank" title="X (Twitter)">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com/authorvikkasarunpareek/" target="_blank" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/channel/UCeT_0yzMsDUcuvcS4qBE4HQ" target="_blank" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://www.goodreads.com/author/show/14430815.Vikkas_Arun_Pareek" target="_blank" title="Goodreads">
+                    <i class="fab fa-goodreads"></i>
+                </a>
+                <a href="https://linktr.ee/authorvikkasarunpareek" target="_blank" title="Linktree">
+                    <i class="fas fa-tree"></i>
+                </a>
+            </div>
+            <p>&copy; 2024 Vikkas Arun Pareek. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html> 

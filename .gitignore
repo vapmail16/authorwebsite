@@ -1,0 +1,29 @@
+# Sensitive files and configs
+serviceAccountKey.json
+config.keys.js
+config.example.js
+config.js
+*.key
+*.pem
+.env*
+**/credentials.*
+**/secrets.*
+
+# Dependencies
+node_modules/
+functions/node_modules/
+.firebase/
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+
+# Firebase
+.firebaserc
+firebase-debug.log

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Vikkas Arun Pareek</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>Vikkas Arun Pareek</span>
+        </div>
+        <button class="nav-toggle">
+            <span class="hamburger"></span>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="https://www.occultdiy.com/" target="_blank">OccultDIY</a></li>
+            <li><a href="index.html#books">Books</a></li>
+            <li><a href="index.html#blog">Blog</a></li>
+            <li><a href="writings.html">Writings</a></li>
+            <li><a href="media.html">Media</a></li>
+            <li><a href="apps.html">Apps</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <h1>Get in Touch</h1>
+            <div class="contact-content">
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required minlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required 
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" required minlength="10"></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">
+                        <span class="button-text">Send Message</span>
+                        <span class="spinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                    </button>
+                    <div id="contactMessage" class="form-message"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" class="modal">
+        <div class="modal-content">
+            <h2>Thank You! 🎉</h2>
+            <p>Your message has been sent successfully. I'll get back to you as soon as possible.</p>
+            <button class="cta-button" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://www.facebook.com/authorvikkasarunpareek/" target="_blank" title="Facebook">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://x.com/vapmail16?mx=2" target="_blank" title="X (Twitter)">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com/authorvikkasarunpareek/" target="_blank" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/channel/UCeT_0yzMsDUcuvcS4qBE4HQ" target="_blank" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://www.goodreads.com/author/show/14430815.Vikkas_Arun_Pareek" target="_blank" title="Goodreads">
+                    <i class="fab fa-goodreads"></i>
+                </a>
+                <a href="https://linktr.ee/authorvikkasarunpareek" target="_blank" title="Linktree">
+                    <i class="fas fa-tree"></i>
+                </a>
+            </div>
+            <p>&copy; 2024 Vikkas Arun Pareek. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-functions-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // EmailJS configuration
+        const CONFIG = {
+            emailjs: {
+                publicKey: "uY4SmhoelEgydM7uA",
+                serviceId: "service_bw2sq4o",
+                templateId: "template_nuvq7d9"
+            }
+        };
+    </script>
+    <script>
+        (function() {
+            emailjs.init(CONFIG.emailjs.publicKey);
+            console.log('EmailJS initialized successfully');
+        })();
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html> 
