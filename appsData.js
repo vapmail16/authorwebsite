@@ -27,6 +27,14 @@ const appsData = {
             status: "In Development",
             github: "https://github.com/vapmail16/BirthdayAppr_react.git",
             website_url: "https://birthdayapp-7d373.web.app/"
+        },
+        {
+            title: "Hindus In UK",
+            description: "Cultural and Religious Website",
+            technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+            status: "In Development",
+            github: "https://github.com/vapmail16/hindusinuk.git",
+            website_url: "https://hindusinuk.web.app/pp/"
         } // Add more work in progress apps
     ],
     wishlist: [
