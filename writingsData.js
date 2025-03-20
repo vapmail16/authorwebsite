@@ -41,7 +41,15 @@ const writingsData = {
             description: "Stories by me in this edition"
         },
         {
-            title: "Prime Spectator Jan 2024 Edition",
+            title: "Prime Spectator Feb 2025 Edition",
+            url: "https://drive.google.com/file/d/19CY0yBEjO6zr4kGqqvQsqV8nWe7EeZIk/view?usp=sharing",
+            category: "News Articles",
+            publication: "Prime Spectator",
+            date: "2025-01-20",
+            description: "News Article on geopolitics by me in this edition"
+        },
+        {
+            title: "Prime Spectator Jan 2025 Edition",
             url: "https://drive.google.com/file/d/1oTQSnVDDf43msxNHeVRckKReYd8vC5XZ/view?usp=sharing",
             category: "News Articles",
             publication: "Prime Spectator",
